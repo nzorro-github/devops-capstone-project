@@ -193,3 +193,33 @@ class TestAccountService(TestCase):
             # Checks for inexistent id
             response = self.client.get(f"/accounts/2023")
             self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_update_account(self):
+            """It should update account with a given id with provided json"""
+            
+            # creates 1 account
+            account = AccountFactory()
+            
+            response = self.client.post(
+                BASE_URL,
+                json=account.serialize(),
+                content_type="application/json"
+                )
+            
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            response = self.client.get("/accounts")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            expected_account = response.get_json()[0] # there is only one
+            self.assertIsNotNone(expected_account)
+
+            expected_account['phone_number'] = '555-1234-5678'
+            response = self.client.put(f"/accounts/{expected_account['id']}", json = expected_account)
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+            response = self.client.get(f"/accounts/{expected_account['id']}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.get_json()['phone_number'], expected_account['phone_number'])
+
+            # Checks for inexistent id
+            response = self.client.get(f"/accounts/2023")
+            self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

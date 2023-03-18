@@ -99,7 +99,20 @@ def read_account(id):
 ######################################################################
 
 # ... place you code here to UPDATE an account ...
-
+@app.route("/accounts/<id>", methods=["PUT"])
+def update_account(id):
+    """
+    Updates an account with given id
+    """
+    account = Account.find(id)
+    if account:
+        account.deserialize(request.get_json())
+        account.update()
+        return make_response(
+          '', status.HTTP_200_OK
+        )
+    else:
+        return make_response('', status.HTTP_404_NOT_FOUND)
 
 ######################################################################
 # DELETE AN ACCOUNT
