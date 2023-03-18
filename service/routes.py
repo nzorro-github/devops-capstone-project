@@ -80,7 +80,19 @@ def list_accounts():
 ######################################################################
 
 # ... place you code here to READ an account ...
-
+@app.route("/accounts/<id>", methods=["GET"])
+def read_account(id):
+    """
+    Returns an account with given id
+    """
+    account = Account.find(id)
+    if account:
+        message = account.serialize()
+        return make_response(
+          jsonify(message), status.HTTP_200_OK
+        )
+    else:
+        return make_response('', status.HTTP_404_NOT_FOUND)
 
 ######################################################################
 # UPDATE AN EXISTING ACCOUNT
