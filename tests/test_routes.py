@@ -126,7 +126,6 @@ class TestAccountService(TestCase):
     # ADD YOUR TEST CASES HERE ...
     def test_list_all_accounts(self):
         """It should send a list of dict of all existing accounts"""
-        response = self.client.get("/accounts")
         
         # creates 3 accounts
         accounts = []
@@ -169,4 +168,28 @@ class TestAccountService(TestCase):
                 self.assertEqual(account.email, acc['email'])
                 self.assertEqual(account.phone_number, acc['phone_number'])
 
+
+    def test_read_accounts(self):
+            """It should respond with a json of the account with given id"""
             
+            # creates 1 account
+            account = AccountFactory()
+            
+            response = self.client.post(
+                BASE_URL,
+                json=account.serialize(),
+                content_type="application/json"
+                )
+            
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            response = self.client.get("/accounts")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            expected_account = response.get_json()[0] # there is only one
+            self.assertIsNotNone(expected_account)
+
+            response = self.client.get(f"/accounts/{expected_account['id']}")
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+            # Checks for inexistent id
+            response = self.client.get(f"/accounts/2023")
+            self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
