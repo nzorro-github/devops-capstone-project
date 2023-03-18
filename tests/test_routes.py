@@ -124,3 +124,49 @@ class TestAccountService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 
     # ADD YOUR TEST CASES HERE ...
+    def test_list_all_accounts(self):
+        """It should send a list of dict of all existing accounts"""
+        response = self.client.get("/accounts")
+        
+        # creates 3 accounts
+        accounts = []
+        for i in range(3):
+            accounts.append(AccountFactory())
+        
+        response = self.client.post(
+              BASE_URL,
+              json=accounts[0].serialize(),
+              content_type="application/json"
+            )
+        
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        
+        response = self.client.get('/accounts')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        returned_accounts = response.get_json()
+        self.assertEqual(len(returned_accounts), 1)
+        self.assertEqual(accounts[0].name, returned_accounts[0]['name'])
+        self.assertEqual(accounts[0].phone_number, returned_accounts[0]['phone_number'])
+
+        # create remaining accounts
+        for i in range(1,3):
+            response = self.client.post(
+              BASE_URL,
+              json=accounts[i].serialize(),
+              content_type="application/json"
+            )
+        
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            response = self.client.get('/accounts')
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            returned_accounts = response.get_json()
+            self.assertEqual(len(returned_accounts), i+1)
+
+            for acc in returned_accounts:
+                account = Account.find(acc['id'])
+                self.assertIsNotNone(account)
+                self.assertEqual(account.name, acc['name'])
+                self.assertEqual(account.email, acc['email'])
+                self.assertEqual(account.phone_number, acc['phone_number'])
+
+            
