@@ -68,7 +68,6 @@ def list_accounts():
     Returns a list of all existing accounts or empty list
     """
     message = []
-    
     for acc in Account.all():
         message.append(acc.serialize())
 
