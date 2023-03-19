@@ -61,13 +61,14 @@ def create_accounts():
 # LIST ALL ACCOUNTS
 ######################################################################
 
-# ... place you code here to LIST accounts ...
+
 @app.route("/accounts", methods=["GET"])
 def list_accounts():
     """
     Returns a list of all existing accounts or empty list
     """
-    message=[] 
+    message = []
+    
     for acc in Account.all():
         message.append(acc.serialize())
 
@@ -79,7 +80,7 @@ def list_accounts():
 # READ AN ACCOUNT
 ######################################################################
 
-# ... place you code here to READ an account ...
+
 @app.route("/accounts/<id>", methods=["GET"])
 def read_account(id):
     """
@@ -98,7 +99,7 @@ def read_account(id):
 # UPDATE AN EXISTING ACCOUNT
 ######################################################################
 
-# ... place you code here to UPDATE an account ...
+
 @app.route("/accounts/<id>", methods=["PUT"])
 def update_account(id):
     """
@@ -118,7 +119,7 @@ def update_account(id):
 # DELETE AN ACCOUNT
 ######################################################################
 
-# ... place you code here to DELETE an account ...
+
 @app.route("/accounts/<id>", methods=["DELETE"])
 def delete_account(id):
     """
