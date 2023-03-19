@@ -121,7 +121,11 @@ class Account(db.Model, PersistentBase):
             self.address = data["address"]
             self.phone_number = data.get("phone_number")
             date_joined = data.get("date_joined")
-            self.date_joined = date.fromisoformat(date_joined)
+            if date_joined:
+                self.date_joined = date.fromisoformat(date_joined)
+            else:
+                self.date_joined = date.today()
+
         except KeyError as error:
             raise DataValidationError("Invalid Account: missing " + error.args[0]) from error
         except TypeError as error:
