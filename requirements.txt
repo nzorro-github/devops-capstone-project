@@ -29,4 +29,5 @@ codecov==2.1.12
 httpie==3.2.1
 
 # Security Check
-Flask-Talisman 
+Flask-Talisman
+Flask-Cors
