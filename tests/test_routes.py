@@ -164,7 +164,7 @@ class TestAccountService(TestCase):
             response = self.client.get('/accounts')
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             returned_accounts = response.get_json()
-            self.assertEqual(len(returned_accounts), i+1)
+            self.assertEqual(len(returned_accounts), i + 1)
 
             for acc in returned_accounts:
                 account = Account.find(acc['id'])
