@@ -89,7 +89,7 @@ def read_account(id):
     if account:
         message = account.serialize()
         return make_response(
-          jsonify(message), status.HTTP_200_OK
+            jsonify(message), status.HTTP_200_OK
         )
     else:
         return make_response('', status.HTTP_404_NOT_FOUND)
@@ -109,7 +109,7 @@ def update_account(id):
         account.deserialize(request.get_json())
         account.update()
         return make_response(
-          '', status.HTTP_200_OK
+            '', status.HTTP_200_OK
         )
     else:
         return make_response('', status.HTTP_404_NOT_FOUND)
