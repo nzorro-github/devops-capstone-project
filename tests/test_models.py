@@ -8,7 +8,6 @@ import os
 from service import app
 from service.models import Account, DataValidationError, db
 from tests.factories import AccountFactory
-from datetime import date
 
 DATABASE_URI = os.getenv(
     "DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/postgres"
@@ -65,7 +64,7 @@ class TestAccount(unittest.TestCase):
         self.assertEqual(account.address, fake_account.address)
         self.assertEqual(account.phone_number, fake_account.phone_number)
         self.assertEqual(account.date_joined, fake_account.date_joined)
-        self.assertEqual(str(account),f"<Account {account.name} id=[{account.id}]>")
+        self.assertEqual(str(account), f"<Account {account.name} id=[{account.id}]>")
 
     def test_add_a_account(self):
         """It should Create an account and add it to the database"""
