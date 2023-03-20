@@ -194,7 +194,7 @@ class TestAccountService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         # Checks for inexistent id
-        response = self.client.get(f"/accounts/2023")
+        response = self.client.get("/accounts/2023")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_update_account(self):
@@ -212,11 +212,11 @@ class TestAccountService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         response = self.client.get("/accounts")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        expected_account = response.get_json()[0] # there is only one
+        expected_account = response.get_json()[0]  # there is only one
         self.assertIsNotNone(expected_account)
 
         expected_account['phone_number'] = '555-1234-5678'
-        response = self.client.put(f"/accounts/{expected_account['id']}", json = expected_account)
+        response = self.client.put(f"/accounts/{expected_account['id']}", json=expected_account)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
         response = self.client.get(f"/accounts/{expected_account['id']}")
@@ -224,10 +224,9 @@ class TestAccountService(TestCase):
         self.assertEqual(response.get_json()['phone_number'], expected_account['phone_number'])
 
         # Checks for inexistent id
-        response = self.client.get(f"/accounts/2023")
+        response = self.client.get("/accounts/2023")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
     
-
     def test_delete_account(self):
         """It should delete an account with a given id"""
         
@@ -243,7 +242,7 @@ class TestAccountService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         response = self.client.get("/accounts")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        expected_account = response.get_json()[0] # there is only one
+        expected_account = response.get_json()[0]  # there is only one
         self.assertIsNotNone(expected_account)
 
         response = self.client.delete(f"/accounts/{expected_account['id']}")
@@ -251,30 +250,28 @@ class TestAccountService(TestCase):
 
         # checks account no longer exists
         response = self.client.get(f"/accounts/{expected_account['id']}")
-        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-    
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)   
 
     def test_root_content_security_policy(self):
         """It should use https only"""
-        resp = self.client.get("/", environ_overrides = HTTPS_ENVIRON)
+        resp = self.client.get("/", environ_overrides=HTTPS_ENVIRON)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
                 
         expected_headers = {'X-Frame-Options': 'SAMEORIGIN',
-                         'X-XSS-Protection': '1; mode=block',
-                         'X-Content-Type-Options': 'nosniff',
-                         'Content-Security-Policy': 'default-src \'self\'; object-src \'none\'',
-                         'Referrer-Policy': 'strict-origin-when-cross-origin'}
+                            'X-XSS-Protection': '1; mode=block',
+                            'X-Content-Type-Options': 'nosniff',
+                            'Content-Security-Policy': 'default-src \'self\'; object-src \'none\'',
+                            'Referrer-Policy': 'strict-origin-when-cross-origin'}
         
         for key, value in expected_headers.items():
             self.assertEqual(value, resp.headers.get(key))
 
-
     def test_root_cors_policy(self):
         """It should have CORS Policy"""
-        resp = self.client.get("/", environ_overrides = HTTPS_ENVIRON)
+        resp = self.client.get("/", environ_overrides=HTTPS_ENVIRON)
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
                 
         key = 'Access-Control-Allow-Origin'                
-        expected_header = { key : '*'}
+        expected_header = {key: '*'}
         
-        self.assertEqual(expected_header[key] , resp.headers.get(key))    
+        self.assertEqual(expected_header[key], resp.headers.get(key))    
